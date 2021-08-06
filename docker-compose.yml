@@ -1,0 +1,14 @@
+version: '3'
+services:
+    jupyter:
+        build: jupyter/.
+        ports: 
+            - "8888:8888"
+        volumes: 
+            - ./notebooks:/home/cartoleiro/
+    postgresql:
+        image: postgres
+        environment:
+            POSTGRES_DB: cartola
+            POSTGRES_PASSWORD: "postgres" 
+        restart: always
