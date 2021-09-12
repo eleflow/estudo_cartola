@@ -9,4 +9,5 @@ dependencies:
   - jupyter
   - requests
   - sqlalchemy
-  - seaborn   
+  - seaborn
+  - psycopg2
