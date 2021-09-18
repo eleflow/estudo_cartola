@@ -21,6 +21,9 @@ class Validator:
         return club
     
     def validate_goal(self, goal):
+        if(not goal):
+            return None
+
         if not re.match(r"\d+", goal):
             raise Exception('goal', f'The value {goal} must be a number')
         return goal
