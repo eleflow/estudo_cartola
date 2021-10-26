@@ -7,3 +7,7 @@ dependencies:
   - matplotlib
   - numpy
   - jupyter
+  - requests
+  - sqlalchemy
+  - seaborn
+  - psycopg2    
