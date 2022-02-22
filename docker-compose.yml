@@ -12,3 +12,4 @@ services:
             POSTGRES_DB: cartola
             POSTGRES_PASSWORD: "postgres" 
         restart: always
+       
