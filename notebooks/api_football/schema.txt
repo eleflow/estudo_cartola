@@ -1,0 +1,172 @@
+--Schema
+
+create table country(
+ID serial PRIMARY KEY, 
+NAME varchar(200),
+CODE char(2),
+FLAG varchar(200),
+TIMEZONE varchar(10)
+);
+comment on column country.FLAG is 'URL';
+comment on column country.TIMEZONE is 'Manually set. e.g. UTC+1 / UTC+6 / UTC-2 / UTC';
+CREATE UNIQUE INDEX country_ix_un ON country (NAME);
+
+
+create table league(
+ID INTEGER primary key,
+NAME VARCHAR(150),
+TYPE VARCHAR(100),
+LOGO VARCHAR(200),
+ID_COUNTRY INTEGER,
+   CONSTRAINT fk_country
+      FOREIGN KEY(ID_COUNTRY) 
+	  REFERENCES country(id)
+	  ON DELETE NO ACTION
+);
+comment on column league.LOGO is 'URL';
+CREATE UNIQUE INDEX league_ix_un ON league (NAME);
+
+create table round( 
+ID_LEAGUE INTEGER,
+SEASON INTEGER,
+NAME VARCHAR(200),
+primary key (ID_LEAGUE, SEASON, NAME),
+ID_COUNTRY INTEGER,
+CONSTRAINT fk_LEAGUE
+      FOREIGN KEY(ID_LEAGUE) 
+	  REFERENCES league(ID)
+	  ON DELETE NO ACTION
+)
+
+comment on TABLE round is 'If league is a cup, check weekly for new rounds';
+
+## FALTA
+create table referee(
+	ID SERIAL PRIMARY key,
+	NAME VARCHAR(150)
+);
+
+
+create table stadium(
+	ID INTEGER primary key,  
+	NAME VARCHAR(150),
+	ADRESS VARCHAR(1000),
+	CAPACITY INT,
+	SURFACE VARCHAR(250),
+	IMAGE VARCHAR(200),
+	ID_CITY INTEGER
+);
+
+comment on column stadium.IMAGE is 'URL';
+
+create table status(
+ID SERIAL PRIMARY key,
+LONG_STATUS VARCHAR(50),
+SHORT_STATUS VARCHAR(10)
+);
+
+
+create table team(
+ID INTEGER PRIMARY KEY,
+NAME VARCHAR(200),
+ID_COUNTRY INTEGER,
+YEAR_FOUNDED SMALLINT,
+national BOOL,
+LOGO VARCHAR(250),
+ID_STADIUM INTEGER,
+   CONSTRAINT fk_country
+      FOREIGN KEY(ID_COUNTRY) 
+	  REFERENCES country(id)
+	  ON DELETE NO action,
+   CONSTRAINT fk_stadium
+      FOREIGN KEY(ID_STADIUM) 
+	  REFERENCES stadium(id)
+	  ON DELETE NO ACTION
+);
+comment on column team.national is 'Brazil, EUA, Spain, Italy...';
+comment on column team.LOGO is 'URL';
+
+
+create table city(
+ID SERIAL,
+NAME VARCHAR(150),
+STATE VARCHAR(150),
+ID_COUNTRY INTEGER,
+primary key(ID),
+   CONSTRAINT fk_country
+      FOREIGN KEY(ID_COUNTRY) 
+	  REFERENCES country(id)	  
+	  ON DELETE NO ACTION
+);
+
+CREATE UNIQUE INDEX city_ix_un ON city (ID_COUNTRY, STATE, NAME);
+
+
+
+create table fixture()
+ID INTEGER primary key,
+ID_LEAGUE INTEGER,
+ID_REFEREE INTEGER,
+ID_STADIUM INTEGER,
+SCHEDULE_TIMESTAMP timestamp,
+FIRST_PERIOD_START_TIMESTAMP timestamp,
+SECOND_PERIOD_START_TIMESTAMP timestamp,
+ID_STATUS INTEGER,
+ID_HOME_TEAM INTEGER,
+HOME_WINNER BOOL,
+HOME_GOALS SMALLINT,
+ID_AWAY_TEAM INTEGER,
+away_winner BOOL,
+away_goals SMALLINT,
+ht_home_goals SMALLINT,
+ht_away_goals SMALLINT,
+ft_home_goals SMALLINT,
+ft_away_goals SMALLINT,
+et_home_goals SMALLINT,
+et_away_goals SMALLINT,
+penalty_home SMALLINT,
+penalty_away SMALLINT,
+CONSTRAINT fk_LEAGUE
+      FOREIGN KEY(ID_LEAGUE) 
+	  REFERENCES league(ID)
+	  ON DELETE NO ACTION,
+CONSTRAINT fk_STADIUM
+      FOREIGN KEY(ID_LEAGUE) 
+	  REFERENCES stadium(ID)
+	  ON DELETE NO ACTION,
+CONSTRAINT fk_REFEREE
+      FOREIGN KEY(ID_LEAGUE) 
+	  REFERENCES referee(ID)
+	  ON DELETE NO ACTION,
+CONSTRAINT fk_STATUS
+      FOREIGN KEY(ID_STATUS) 
+	  REFERENCES status(ID)
+	  ON DELETE NO action,
+CONSTRAINT fk_AWAY_TEAM
+      FOREIGN KEY(ID_AWAY_TEAM) 
+	  REFERENCES team(ID)
+	  ON DELETE NO action,
+CONSTRAINT fk_HOME_TEAM
+      FOREIGN KEY(ID_HOME_TEAM) 
+	  REFERENCES team(ID)
+	  ON DELETE NO ACTION);
+
+
+INSERT INTO public.status (short_status, long_status) VALUES('TBD','Time To Be Defined');
+INSERT INTO public.status (short_status, long_status) VALUES('NS','Not Started');
+INSERT INTO public.status (short_status, long_status) VALUES('1H','First Half, Kick Off');
+INSERT INTO public.status (short_status, long_status) VALUES('HT','Halftime');
+INSERT INTO public.status (short_status, long_status) VALUES('2H','Second Half, 2nd Half Started');
+INSERT INTO public.status (short_status, long_status) VALUES('ET','Extra Time');
+INSERT INTO public.status (short_status, long_status) VALUES('FT','Match Finished');
+INSERT INTO public.status (short_status, long_status) VALUES('AET','Match Finished After Extra Time');
+INSERT INTO public.status (short_status, long_status) VALUES('PEN','Match Finished After Penalty');
+INSERT INTO public.status (short_status, long_status) VALUES('BT','Break Time (in Extra Time)');
+INSERT INTO public.status (short_status, long_status) VALUES('SUSP','Match Suspended');
+INSERT INTO public.status (short_status, long_status) VALUES('INT','Match Interrupted');
+INSERT INTO public.status (short_status, long_status) VALUES('PST','Match Postponed');
+INSERT INTO public.status (short_status, long_status) VALUES('CANC','Match Cancelled');
+INSERT INTO public.status (short_status, long_status) VALUES('ABD','Match Abandoned');
+INSERT INTO public.status (short_status, long_status) VALUES('AWD','Technical Loss');
+INSERT INTO public.status (short_status, long_status) VALUES('WO','WalkOver');
+INSERT INTO public.status (short_status, long_status) VALUES('LIVE','In Progress');
