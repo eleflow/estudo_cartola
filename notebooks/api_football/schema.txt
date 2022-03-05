@@ -1,3 +1,13 @@
+Cartola
+
+API de futebol
+https://www.api-football.com/documentation-v3#section/Introduction
+https://rapidapi.com/api-sports/api/api-football
+https://www.sportmonks.com/football-api/#plans-pricing
+
+O quao normalizado vamos fazer? Salvar estadio em tablea separada? Juizes?
+
+
 --Schema
 
 create table country(
@@ -24,7 +34,6 @@ ID_COUNTRY INTEGER,
 	  ON DELETE NO ACTION
 );
 comment on column league.LOGO is 'URL';
-CREATE UNIQUE INDEX league_ix_un ON league (NAME);
 
 create table round( 
 ID_LEAGUE INTEGER,
@@ -40,12 +49,12 @@ CONSTRAINT fk_LEAGUE
 
 comment on TABLE round is 'If league is a cup, check weekly for new rounds';
 
-## FALTA
-create table referee(
-	ID SERIAL PRIMARY key,
-	NAME VARCHAR(150)
+CREATE TABLE public.referee (
+	id serial4 NOT NULL,
+	"name" varchar(150) NULL,
+	CONSTRAINT referee_pkey PRIMARY KEY (id)
 );
-
+CREATE UNIQUE INDEX referee_name_idx ON public.referee ("name");
 
 create table stadium(
 	ID INTEGER primary key,  
@@ -53,17 +62,18 @@ create table stadium(
 	ADRESS VARCHAR(1000),
 	CAPACITY INT,
 	SURFACE VARCHAR(250),
-	IMAGE VARCHAR(200),
-	ID_CITY INTEGER
+	IMAGE VARCHAR(200)
 );
 
 comment on column stadium.IMAGE is 'URL';
 
-create table status(
-ID SERIAL PRIMARY key,
-LONG_STATUS VARCHAR(50),
-SHORT_STATUS VARCHAR(10)
+CREATE TABLE public.status (
+	id serial4 NOT NULL,
+	long_status varchar(50) NULL,
+	short_status varchar(10) NULL,
+	CONSTRAINT status_pkey PRIMARY KEY (id)
 );
+CREATE UNIQUE INDEX status_long_status_idx ON public.status USING btree (long_status, short_status);
 
 
 create table team(
@@ -103,53 +113,47 @@ CREATE UNIQUE INDEX city_ix_un ON city (ID_COUNTRY, STATE, NAME);
 
 
 
-create table fixture()
-ID INTEGER primary key,
-ID_LEAGUE INTEGER,
-ID_REFEREE INTEGER,
-ID_STADIUM INTEGER,
-SCHEDULE_TIMESTAMP timestamp,
-FIRST_PERIOD_START_TIMESTAMP timestamp,
-SECOND_PERIOD_START_TIMESTAMP timestamp,
-ID_STATUS INTEGER,
-ID_HOME_TEAM INTEGER,
-HOME_WINNER BOOL,
-HOME_GOALS SMALLINT,
-ID_AWAY_TEAM INTEGER,
-away_winner BOOL,
-away_goals SMALLINT,
-ht_home_goals SMALLINT,
-ht_away_goals SMALLINT,
-ft_home_goals SMALLINT,
-ft_away_goals SMALLINT,
-et_home_goals SMALLINT,
-et_away_goals SMALLINT,
-penalty_home SMALLINT,
-penalty_away SMALLINT,
-CONSTRAINT fk_LEAGUE
-      FOREIGN KEY(ID_LEAGUE) 
-	  REFERENCES league(ID)
-	  ON DELETE NO ACTION,
-CONSTRAINT fk_STADIUM
-      FOREIGN KEY(ID_LEAGUE) 
-	  REFERENCES stadium(ID)
-	  ON DELETE NO ACTION,
-CONSTRAINT fk_REFEREE
-      FOREIGN KEY(ID_LEAGUE) 
-	  REFERENCES referee(ID)
-	  ON DELETE NO ACTION,
-CONSTRAINT fk_STATUS
-      FOREIGN KEY(ID_STATUS) 
-	  REFERENCES status(ID)
-	  ON DELETE NO action,
-CONSTRAINT fk_AWAY_TEAM
-      FOREIGN KEY(ID_AWAY_TEAM) 
-	  REFERENCES team(ID)
-	  ON DELETE NO action,
-CONSTRAINT fk_HOME_TEAM
-      FOREIGN KEY(ID_HOME_TEAM) 
-	  REFERENCES team(ID)
-	  ON DELETE NO ACTION);
+-- public.fixture definition
+
+-- Drop table
+
+-- DROP TABLE public.fixture;
+
+CREATE TABLE public.fixture (
+	id int4 NOT NULL,
+	id_league int4 NULL,
+	id_referee int4 NULL,
+	id_stadium int4 NULL,
+	schedule_timestamp timestamp NULL,
+	first_period_start_timestamp timestamp NULL,
+	second_period_start_timestamp timestamp NULL,
+	id_status int4 NULL,
+	id_home_team int4 NULL,
+	home_winner bool NULL,
+	home_goals int2 NULL,
+	id_away_team int4 NULL,
+	away_winner bool NULL,
+	away_goals int2 NULL,
+	ht_home_goals int2 NULL,
+	ht_away_goals int2 NULL,
+	ft_home_goals int2 NULL,
+	ft_away_goals int2 NULL,
+	et_home_goals int2 NULL,
+	et_away_goals int2 NULL,
+	penalty_home int2 NULL,
+	penalty_away int2 NULL,
+	CONSTRAINT fixture_pkey PRIMARY KEY (id)
+);
+
+
+-- public.fixture foreign keys
+
+ALTER TABLE public.fixture ADD CONSTRAINT fk_away_team FOREIGN KEY (id_away_team) REFERENCES public.team(id);
+ALTER TABLE public.fixture ADD CONSTRAINT fk_home_team FOREIGN KEY (id_home_team) REFERENCES public.team(id);
+ALTER TABLE public.fixture ADD CONSTRAINT fk_league FOREIGN KEY (id_league) REFERENCES public.league(id);
+ALTER TABLE public.fixture ADD CONSTRAINT fk_referee FOREIGN KEY (id_referee) REFERENCES public.referee(id);
+ALTER TABLE public.fixture ADD CONSTRAINT fk_stadium FOREIGN KEY (id_stadium) REFERENCES public.stadium(id);
+ALTER TABLE public.fixture ADD CONSTRAINT fk_status FOREIGN KEY (id_status) REFERENCES public.status(id);
 
 
 INSERT INTO public.status (short_status, long_status) VALUES('TBD','Time To Be Defined');
