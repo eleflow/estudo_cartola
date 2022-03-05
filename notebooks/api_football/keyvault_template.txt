@@ -1,0 +1,10 @@
+# ALTERE O NOME DESSE ARQUIVO PARA: "KEYVAULT.CFG"
+
+[api_football]
+x-rapidapi-key: ???
+
+[postgre]
+host: ???
+database: ???
+user: ???
+password: ???

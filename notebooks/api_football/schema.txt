@@ -49,12 +49,12 @@ CONSTRAINT fk_LEAGUE
 
 comment on TABLE round is 'If league is a cup, check weekly for new rounds';
 
-CREATE TABLE public.referee (
+CREATE TABLE referee (
 	id serial4 NOT NULL,
 	"name" varchar(150) NULL,
 	CONSTRAINT referee_pkey PRIMARY KEY (id)
 );
-CREATE UNIQUE INDEX referee_name_idx ON public.referee ("name");
+CREATE UNIQUE INDEX referee_name_idx ON referee ("name");
 
 create table stadium(
 	ID INTEGER primary key,  
@@ -67,13 +67,13 @@ create table stadium(
 
 comment on column stadium.IMAGE is 'URL';
 
-CREATE TABLE public.status (
+CREATE TABLE status (
 	id serial4 NOT NULL,
 	long_status varchar(50) NULL,
 	short_status varchar(10) NULL,
 	CONSTRAINT status_pkey PRIMARY KEY (id)
 );
-CREATE UNIQUE INDEX status_long_status_idx ON public.status USING btree (long_status, short_status);
+CREATE UNIQUE INDEX status_long_status_idx ON status USING btree (long_status, short_status);
 
 
 create table team(
@@ -112,16 +112,10 @@ primary key(ID),
 CREATE UNIQUE INDEX city_ix_un ON city (ID_COUNTRY, STATE, NAME);
 
 
-
--- public.fixture definition
-
--- Drop table
-
--- DROP TABLE public.fixture;
-
-CREATE TABLE public.fixture (
+CREATE TABLE fixture (
 	id int4 NOT NULL,
 	id_league int4 NULL,
+	season integer null,
 	id_referee int4 NULL,
 	id_stadium int4 NULL,
 	schedule_timestamp timestamp NULL,
@@ -146,31 +140,31 @@ CREATE TABLE public.fixture (
 );
 
 
--- public.fixture foreign keys
+-- fixture foreign keys
 
-ALTER TABLE public.fixture ADD CONSTRAINT fk_away_team FOREIGN KEY (id_away_team) REFERENCES public.team(id);
-ALTER TABLE public.fixture ADD CONSTRAINT fk_home_team FOREIGN KEY (id_home_team) REFERENCES public.team(id);
-ALTER TABLE public.fixture ADD CONSTRAINT fk_league FOREIGN KEY (id_league) REFERENCES public.league(id);
-ALTER TABLE public.fixture ADD CONSTRAINT fk_referee FOREIGN KEY (id_referee) REFERENCES public.referee(id);
-ALTER TABLE public.fixture ADD CONSTRAINT fk_stadium FOREIGN KEY (id_stadium) REFERENCES public.stadium(id);
-ALTER TABLE public.fixture ADD CONSTRAINT fk_status FOREIGN KEY (id_status) REFERENCES public.status(id);
+ALTER TABLE fixture ADD CONSTRAINT fk_away_team FOREIGN KEY (id_away_team) REFERENCES team(id);
+ALTER TABLE fixture ADD CONSTRAINT fk_home_team FOREIGN KEY (id_home_team) REFERENCES team(id);
+ALTER TABLE fixture ADD CONSTRAINT fk_league FOREIGN KEY (id_league) REFERENCES league(id);
+ALTER TABLE fixture ADD CONSTRAINT fk_referee FOREIGN KEY (id_referee) REFERENCES referee(id);
+ALTER TABLE fixture ADD CONSTRAINT fk_stadium FOREIGN KEY (id_stadium) REFERENCES stadium(id);
+ALTER TABLE fixture ADD CONSTRAINT fk_status FOREIGN KEY (id_status) REFERENCES status(id);
 
 
-INSERT INTO public.status (short_status, long_status) VALUES('TBD','Time To Be Defined');
-INSERT INTO public.status (short_status, long_status) VALUES('NS','Not Started');
-INSERT INTO public.status (short_status, long_status) VALUES('1H','First Half, Kick Off');
-INSERT INTO public.status (short_status, long_status) VALUES('HT','Halftime');
-INSERT INTO public.status (short_status, long_status) VALUES('2H','Second Half, 2nd Half Started');
-INSERT INTO public.status (short_status, long_status) VALUES('ET','Extra Time');
-INSERT INTO public.status (short_status, long_status) VALUES('FT','Match Finished');
-INSERT INTO public.status (short_status, long_status) VALUES('AET','Match Finished After Extra Time');
-INSERT INTO public.status (short_status, long_status) VALUES('PEN','Match Finished After Penalty');
-INSERT INTO public.status (short_status, long_status) VALUES('BT','Break Time (in Extra Time)');
-INSERT INTO public.status (short_status, long_status) VALUES('SUSP','Match Suspended');
-INSERT INTO public.status (short_status, long_status) VALUES('INT','Match Interrupted');
-INSERT INTO public.status (short_status, long_status) VALUES('PST','Match Postponed');
-INSERT INTO public.status (short_status, long_status) VALUES('CANC','Match Cancelled');
-INSERT INTO public.status (short_status, long_status) VALUES('ABD','Match Abandoned');
-INSERT INTO public.status (short_status, long_status) VALUES('AWD','Technical Loss');
-INSERT INTO public.status (short_status, long_status) VALUES('WO','WalkOver');
-INSERT INTO public.status (short_status, long_status) VALUES('LIVE','In Progress');
+INSERT INTO status (short_status, long_status) VALUES('TBD','Time To Be Defined');
+INSERT INTO status (short_status, long_status) VALUES('NS','Not Started');
+INSERT INTO status (short_status, long_status) VALUES('1H','First Half, Kick Off');
+INSERT INTO status (short_status, long_status) VALUES('HT','Halftime');
+INSERT INTO status (short_status, long_status) VALUES('2H','Second Half, 2nd Half Started');
+INSERT INTO status (short_status, long_status) VALUES('ET','Extra Time');
+INSERT INTO status (short_status, long_status) VALUES('FT','Match Finished');
+INSERT INTO status (short_status, long_status) VALUES('AET','Match Finished After Extra Time');
+INSERT INTO status (short_status, long_status) VALUES('PEN','Match Finished After Penalty');
+INSERT INTO status (short_status, long_status) VALUES('BT','Break Time (in Extra Time)');
+INSERT INTO status (short_status, long_status) VALUES('SUSP','Match Suspended');
+INSERT INTO status (short_status, long_status) VALUES('INT','Match Interrupted');
+INSERT INTO status (short_status, long_status) VALUES('PST','Match Postponed');
+INSERT INTO status (short_status, long_status) VALUES('CANC','Match Cancelled');
+INSERT INTO status (short_status, long_status) VALUES('ABD','Match Abandoned');
+INSERT INTO status (short_status, long_status) VALUES('AWD','Technical Loss');
+INSERT INTO status (short_status, long_status) VALUES('WO','WalkOver');
+INSERT INTO status (short_status, long_status) VALUES('LIVE','In Progress');
