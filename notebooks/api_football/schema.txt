@@ -149,6 +149,22 @@ ALTER TABLE fixture ADD CONSTRAINT fk_referee FOREIGN KEY (id_referee) REFERENCE
 ALTER TABLE fixture ADD CONSTRAINT fk_stadium FOREIGN KEY (id_stadium) REFERENCES stadium(id);
 ALTER TABLE fixture ADD CONSTRAINT fk_status FOREIGN KEY (id_status) REFERENCES status(id);
 
+create table player(
+id int4,
+name varchar(100),
+firstname varchar(100),
+lastname varchar(100),
+birth_date date,
+id_country int4,
+id_nationality  int4,
+height decimal,
+weight decimal,
+injured bool default false,
+photo varchar(200));
+
+ALTER TABLE player ADD CONSTRAINT fk_id_country FOREIGN KEY (id_country) REFERENCES country(id);
+ALTER TABLE player ADD CONSTRAINT fk_id_nationality FOREIGN KEY (id_nationality) REFERENCES country(id);
+
 
 INSERT INTO status (short_status, long_status) VALUES('TBD','Time To Be Defined');
 INSERT INTO status (short_status, long_status) VALUES('NS','Not Started');
@@ -168,3 +184,6 @@ INSERT INTO status (short_status, long_status) VALUES('ABD','Match Abandoned');
 INSERT INTO status (short_status, long_status) VALUES('AWD','Technical Loss');
 INSERT INTO status (short_status, long_status) VALUES('WO','WalkOver');
 INSERT INTO status (short_status, long_status) VALUES('LIVE','In Progress');
+
+
+INSERT INTO public.country (id, "name", code) VALUES(0, 'Error', 'ER');
