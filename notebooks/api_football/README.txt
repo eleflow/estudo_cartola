@@ -1,4 +1,17 @@
-Caso você necessite popular o banco, siga a trilha abaixo:
+Requisitos para rodar o projeto:
+- Python 3.7+
+- Conta na RapidAPI
+- Banco PostgreSQL
+
+Para ter acesso a API, acesse o site https://rapidapi.com/auth/sign-up?referral=/api-sports/api/api-football.
+Você ja irá cair direto na pagina da API com sua TOKEN no campo X-RapidAPI-Key
+
+-> Lembre de copiar o arquivo keyvault_template e alterar os campos com o campo "???"
+Você precisará da API-KEY e das credencias de acesso ao seu banco e nada mais.
+
+
+
+Para popular o banco pela primeira vez, execute todo o SQL do arquivo schema.txt no seu banco e então inicie a execução dos notebooks:
 
     - primeira_carga_dos_paise.ipynb
         - Popula todos os paises que tem ligas na API

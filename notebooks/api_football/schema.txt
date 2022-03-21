@@ -1,14 +1,12 @@
-Cartola
+-- Cartola
 
-API de futebol
-https://www.api-football.com/documentation-v3#section/Introduction
-https://rapidapi.com/api-sports/api/api-football
-https://www.sportmonks.com/football-api/#plans-pricing
-
-O quao normalizado vamos fazer? Salvar estadio em tablea separada? Juizes?
+-- API de futebol
+-- https://www.api-football.com/documentation-v3#section/Introduction
+-- https://rapidapi.com/api-sports/api/api-football
+-- https://www.sportmonks.com/football-api/#plans-pricing
 
 
---Schema
+-- Schema
 
 create table country(
 ID serial PRIMARY KEY, 
@@ -162,9 +160,59 @@ weight decimal,
 injured bool default false,
 photo varchar(200));
 
+CREATE UNIQUE INDEX player_id_idx ON public.player (id);
+
 ALTER TABLE player ADD CONSTRAINT fk_id_country FOREIGN KEY (id_country) REFERENCES country(id);
 ALTER TABLE player ADD CONSTRAINT fk_id_nationality FOREIGN KEY (id_nationality) REFERENCES country(id);
 
+
+create table player_statistics(
+id_player int4,
+id_team int4,
+id_league int4,
+season int4,
+game_appearences int4,
+game_lineups int4,
+game_minutes int4,
+game_number  int4,
+game_position varchar(100),
+game_rating float,
+game_captain bool,
+substitutes_in  int4,
+substitutes_out  int4,
+substitutes_bench  int4,
+shots_total  int4,
+shots_on  int4,
+goals_total  int4,
+goals_conceded  int4,
+goals_assists  int4,
+goals_saves  int4,
+passes_total  int4,
+passes_key  int4,
+passes_accuracy  int4,
+tackles_total  int4,
+tackles_blocks  int4,
+tackles_interceptions  int4,
+duels_total  int4,
+duels_won  int4,
+dribbles_attempts  int4,
+dribbles_success  int4,
+dribbles_past  int4,
+fouls_drawn  int4,
+fouls_committed  int4,
+cards_yellow  int4,
+cards_yellowred  int4,
+cards_red  int4,
+penalty_won  int4,
+penalty_commited  int4,
+penalty_scored  int4,
+penalty_missed  int4,
+penalty_saved  int4
+);
+
+ALTER TABLE player_statistics ADD CONSTRAINT fk_id_player FOREIGN KEY (id_player) REFERENCES player(id);
+ALTER TABLE player_statistics ADD CONSTRAINT fk_id_team FOREIGN KEY (id_team) REFERENCES team(id);
+ALTER TABLE player_statistics ADD CONSTRAINT fk_id_league FOREIGN KEY (id_league) REFERENCES league(id);
 
 INSERT INTO status (short_status, long_status) VALUES('TBD','Time To Be Defined');
 INSERT INTO status (short_status, long_status) VALUES('NS','Not Started');
