@@ -166,7 +166,7 @@ ALTER TABLE player ADD CONSTRAINT fk_id_country FOREIGN KEY (id_country) REFEREN
 ALTER TABLE player ADD CONSTRAINT fk_id_nationality FOREIGN KEY (id_nationality) REFERENCES country(id);
 
 
-create table player_statistics(
+create table player_league_statistics(
 id_player int4,
 id_team int4,
 id_league int4,
@@ -210,9 +210,9 @@ penalty_missed  int4,
 penalty_saved  int4
 );
 
-ALTER TABLE player_statistics ADD CONSTRAINT fk_id_player FOREIGN KEY (id_player) REFERENCES player(id);
-ALTER TABLE player_statistics ADD CONSTRAINT fk_id_team FOREIGN KEY (id_team) REFERENCES team(id);
-ALTER TABLE player_statistics ADD CONSTRAINT fk_id_league FOREIGN KEY (id_league) REFERENCES league(id);
+ALTER TABLE player_league_statistics ADD CONSTRAINT fk_id_player FOREIGN KEY (id_player) REFERENCES player(id);
+ALTER TABLE player_league_statistics ADD CONSTRAINT fk_id_team FOREIGN KEY (id_team) REFERENCES team(id);
+ALTER TABLE player_league_statistics ADD CONSTRAINT fk_id_league FOREIGN KEY (id_league) REFERENCES league(id);
 
 INSERT INTO status (short_status, long_status) VALUES('TBD','Time To Be Defined');
 INSERT INTO status (short_status, long_status) VALUES('NS','Not Started');
