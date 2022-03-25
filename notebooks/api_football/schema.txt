@@ -33,17 +33,18 @@ ID_COUNTRY INTEGER,
 );
 comment on column league.LOGO is 'URL';
 
-create table round( 
-ID_LEAGUE INTEGER,
-SEASON INTEGER,
-NAME VARCHAR(200),
-primary key (ID_LEAGUE, SEASON, NAME),
-ID_COUNTRY INTEGER,
-CONSTRAINT fk_LEAGUE
-      FOREIGN KEY(ID_LEAGUE) 
-	  REFERENCES league(ID)
-	  ON DELETE NO ACTION
-)
+
+CREATE TABLE round (
+	id serial4 NOT NULL,
+	id_league int4 NOT NULL,
+	season int4 NOT NULL,
+	"name" varchar(200) NOT NULL,
+	id_country int4 NULL,
+	CONSTRAINT round_pkey PRIMARY KEY (id),
+	CONSTRAINT fk_LEAGUE FOREIGN KEY(ID_LEAGUE) REFERENCES league(ID) ON DELETE NO ACTION
+);
+CREATE UNIQUE INDEX round_unique ON public.round (id_league,season,name);
+
 
 comment on TABLE round is 'If league is a cup, check weekly for new rounds';
 
@@ -113,6 +114,7 @@ CREATE UNIQUE INDEX city_ix_un ON city (ID_COUNTRY, STATE, NAME);
 CREATE TABLE fixture (
 	id int4 NOT NULL,
 	id_league int4 NULL,
+	id_round int4 NULL,
 	season integer null,
 	id_referee int4 NULL,
 	id_stadium int4 NULL,
@@ -139,7 +141,7 @@ CREATE TABLE fixture (
 
 
 -- fixture foreign keys
-
+ALTER TABLE fixture ADD CONSTRAINT fk_round FOREIGN KEY (id_round) REFERENCES round(id);
 ALTER TABLE fixture ADD CONSTRAINT fk_away_team FOREIGN KEY (id_away_team) REFERENCES team(id);
 ALTER TABLE fixture ADD CONSTRAINT fk_home_team FOREIGN KEY (id_home_team) REFERENCES team(id);
 ALTER TABLE fixture ADD CONSTRAINT fk_league FOREIGN KEY (id_league) REFERENCES league(id);
@@ -213,6 +215,51 @@ penalty_saved  int4
 ALTER TABLE player_league_statistics ADD CONSTRAINT fk_id_player FOREIGN KEY (id_player) REFERENCES player(id);
 ALTER TABLE player_league_statistics ADD CONSTRAINT fk_id_team FOREIGN KEY (id_team) REFERENCES team(id);
 ALTER TABLE player_league_statistics ADD CONSTRAINT fk_id_league FOREIGN KEY (id_league) REFERENCES league(id);
+
+
+create table player_fixture_statistics(
+id_fixture int4,
+id_team int4 ,
+id_player int4,
+games_minutes  int4,
+games_number  int4,
+games_position  varchar(50),
+games_rating  float8,
+games_captain  bool,
+games_substitute  bool,
+offsides  int4,
+shots_total  int4,
+shots_on  int4,
+goals_total  int4,
+goals_conceded  int4,
+goals_assists  int4,
+goals_saves  int4,
+passes_total  int4,
+passes_key  int4,
+passes_accuracy  int4,
+tackles_total  int4,
+tackles_blocks  int4,
+tackles_interceptions  int4,
+duels_total  int4,
+duels_won  int4,
+dribbles_attempts  int4,
+dribbles_success  int4,
+dribbles_past  int4,
+fouls_drawn  int4,
+fouls_committed  int4,
+cards_yellow  int4,
+cards_red  int4,
+penalty_won  int4,
+penalty_commited  int4,
+penalty_scored  int4,
+penalty_missed  int4,
+penalty_saved  int4);
+
+ALTER TABLE player_fixture_statistics ADD CONSTRAINT fk_id_fixture FOREIGN KEY (id_fixture) REFERENCES fixture(id);
+ALTER TABLE player_fixture_statistics ADD CONSTRAINT fk_id_player FOREIGN KEY (id_player) REFERENCES player(id);
+ALTER TABLE player_fixture_statistics ADD CONSTRAINT fk_id_team FOREIGN KEY (id_team) REFERENCES team(id);
+
+
 
 INSERT INTO status (short_status, long_status) VALUES('TBD','Time To Be Defined');
 INSERT INTO status (short_status, long_status) VALUES('NS','Not Started');
