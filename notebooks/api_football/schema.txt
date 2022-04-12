@@ -163,6 +163,10 @@ injured bool default false,
 photo varchar(200));
 
 CREATE UNIQUE INDEX player_id_idx ON public.player (id);
+INSERT INTO public.player
+(id, "name", firstname, lastname, birth_date, id_country, id_nationality, height, weight, injured, photo)
+VALUES(0, 'Jogador', 'Jogador', 'nao cadastrado', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
 
 ALTER TABLE player ADD CONSTRAINT fk_id_country FOREIGN KEY (id_country) REFERENCES country(id);
 ALTER TABLE player ADD CONSTRAINT fk_id_nationality FOREIGN KEY (id_nationality) REFERENCES country(id);
