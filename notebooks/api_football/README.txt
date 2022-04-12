@@ -26,4 +26,7 @@ Para popular o banco pela primeira vez, execute todo o SQL do arquivo schema.txt
         - Adiciona os times deste pais. Necessário passar pais e liga!
 
     - fixture_updater
-        - Adiciona para esta liga e season, as partidas disputadas. Necessário passar Liga e Season!
+        - Adiciona para esta liga e season, as partidas disputadas e as estatiscas das mesmas, tambem a sumarização das estatisticas dos jogadores nesta liga. Necessário passar Liga e Season!
+
+    - fixture_player_update
+        - Atualiza as estatisticas dos jogadores individualmente por liga e por rodada
