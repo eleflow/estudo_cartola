@@ -17,6 +17,11 @@ notebooks/.jupyter/
 notebooks/.local/*
 notebooks/.ipython/*
 
+.venv
+__pycache__
+*.pyc
+.pytest_cache
+
 # Remove previous ipynb_checkpoints
 #   git rm -r .ipynb_checkpoints/
 
