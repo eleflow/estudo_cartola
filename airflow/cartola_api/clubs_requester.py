@@ -3,7 +3,7 @@ import json
 import requests
 
 from airflow.cartola_api.requester import Requester
-from airflow.cartola_api.model.club import ClubBuilder
+from airflow.cartola_api.model.club import Club, ClubBuilder
 
 class ClubsRequester(Requester):
     
@@ -17,19 +17,14 @@ class ClubsRequester(Requester):
         clubs_json = json.loads(clubs_page.content)
         clubs_dict = clubs_json[self.dictionary_key]
 
-        clubs = []
         year = datetime.date.today().year
 
-        for id in clubs_dict:
-            club = self.__build_club__(clubs_dict[id], year)
-            clubs.append(club.asdict())
-
-        return clubs
+        return [self.__build_club__(clubs_dict[id], year) for id in clubs_dict]
     
     def __build_club__(self, club, year):
-        return ClubBuilder() \
-                    .id(club['id']) \
-                    .name(club['nome']) \
-                    .initials(club['abreviacao']) \
-                    .year(year) \
-                    .build()
+        return (ClubBuilder()
+                    .id(club[Club.id])
+                    .name(club[Club.name])
+                    .initials(club[Club.initials])
+                    .year(year)
+                    .build()).asdict()

@@ -2,8 +2,16 @@ from typing import List
 from airflow.cartola_api.model.scout import Scout, ScoutBuilder
 
 class Athlete:
+
+    scout: str = "scout"
+    nickname: str = "apelido"
+    picture: str = "foto"
+    points: str = "pontuacao"
+    position_id: str = "posicao_id"
+    club_id: str = "clube_id"
+    played_the_game: str = "entrou_em_campo"
     
-    def __init__(self, id:int, scouts:List[Scout], nickname:str, picture:str, points:float, position_id:int, club_id:int, played_the_game:bool) -> None:
+    def __init__(self, id:int, scouts:List[Scout], nickname:str, picture:str, points:float, position_id:int, club_id:int, played_the_game:bool, year: int) -> None:
         self.id = id
         self.scouts = scouts
         self.nickname = nickname
@@ -12,6 +20,7 @@ class Athlete:
         self.position_id = position_id
         self.club_id = club_id
         self.played_the_game = played_the_game
+        self.year = year
     
     def asdict(self):
         return (
@@ -23,7 +32,8 @@ class Athlete:
                 "points": self.points,
                 "position_id": self.position_id,
                 "club_id": self.club_id,
-                "played_the_game": self.played_the_game
+                "played_the_game": self.played_the_game,
+                "year": self.year
             }
         )
 
@@ -33,7 +43,7 @@ class AthleteBuilder:
         self.id = id
         return self
     
-    def scout(self, scouts):
+    def scouts(self, scouts):
         self.scouts = scouts
         return self
     
@@ -61,16 +71,21 @@ class AthleteBuilder:
         self.played_the_game = played_the_game
         return self
     
+    def year(self, year):
+        self.year = year
+        return self
+    
     def build(self):
         scouts = [ScoutBuilder().scout_value(scout, value).build for scout, value in self.scouts.items()]
 
         return Athlete(
-            self.id,
-            scouts,
-            self.nickname,
-            self.picture,
-            self.points,
-            self.position_id,
-            self.club_id,
-            self.played_the_game
+            id=self.id,
+            scouts=scouts,
+            nickname=self.nickname,
+            picture=self.picture,
+            points=self.points,
+            position_id=self.position_id,
+            club_id=self.club_id,
+            played_the_game=self.played_the_game,
+            year=self.year
         )

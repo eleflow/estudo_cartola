@@ -3,7 +3,7 @@ import json
 import requests
 
 from airflow.cartola_api.requester import Requester
-from airflow.cartola_api.model.match import MatchBuilder
+from airflow.cartola_api.model.match import Match, MatchBuilder
 
 class MatchesRequester(Requester):
     
@@ -30,16 +30,16 @@ class MatchesRequester(Requester):
         return matches
     
     def __build_match__(self, match_data, turn, year):
-        return MatchBuilder() \
-                    .match_id(match_data['partida_id']) \
-                    .turn(turn) \
-                    .home_id(match_data['clube_casa_id']) \
-                    .visitor_id(match_data['clube_visitante_id']) \
-                    .date(match_data['partida_data']) \
-                    .timestamp(match_data['timestamp']) \
-                    .local(match_data['local']) \
-                    .valid(match_data['valida']) \
-                    .home_goal(match_data['placar_oficial_mandante']) \
-                    .visitor_goal(match_data['placar_oficial_visitante']) \
-                    .year(year) \
-                    .build()
+        return (MatchBuilder()
+                    .match_id(match_data[Match.match_id])
+                    .turn(turn)
+                    .home_id(match_data[Match.home_id])
+                    .visitor_id(match_data[Match.visitor_id])
+                    .date(match_data[Match.date])
+                    .timestamp(match_data[Match.timestamp])
+                    .local(match_data[Match.local])
+                    .valid(match_data[Match.valid])
+                    .home_goal(match_data[Match.home_goal])
+                    .visitor_goal(match_data[Match.visitor_goal])
+                    .year(year)
+                    .build())
