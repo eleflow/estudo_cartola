@@ -6,7 +6,7 @@ import requests_mock
 from airflow.cartola_api.config import Config
 from airflow.cartola_api.matches_requester import MatchesRequester
 
-config = Config()
+config = Config.instance()
 
 def test_mock_request():
     with requests_mock.Mocker() as mock_request:

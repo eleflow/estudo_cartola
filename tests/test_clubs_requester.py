@@ -1,12 +1,11 @@
 from datetime import datetime
 import pytest
-import requests
 import requests_mock
 
 from airflow.cartola_api.config import Config
 from airflow.cartola_api.clubs_requester import ClubsRequester
 
-config = Config()
+config = Config.instance()
 
 @pytest.mark.parametrize(
     ["expected", "response"], 
