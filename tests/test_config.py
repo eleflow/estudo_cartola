@@ -1,6 +1,6 @@
 import pytest
 
-from airflow.cartola_api.config import Config
+from cartola_requests.config import Config
 
 config = Config.instance()
 

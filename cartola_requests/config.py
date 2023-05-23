@@ -1,3 +1,5 @@
+from datetime import datetime
+
 class Config:
 
     _instance = None
@@ -10,6 +12,13 @@ class Config:
     
     def get_cartola_uri(self) -> str:
         return "https://api.cartolafc.globo.com"
+    
+    def get_start_data(self):
+        return datetime(2023, 4, 18)
+    
+    def get_schedule_interval(self):
+        # Execute toda terça-feira às 17:00 horas
+        return "0 17 * * tue"
     
     def get_pontuacao(self) -> dict:
         return {
@@ -32,5 +41,6 @@ class Config:
                 "FC": (-0.3, "Falta cometida" ),
                 "PC": (-1.0, "Pênalti cometido" ),
                 "GC": (-3.0, "Gol contra" ),
-                "CV": (-3.0, "Cartão vermelho" )
+                "CV": (-3.0, "Cartão vermelho" ),
+                "V" : ( 0.25, "Desconhecido" )
             }

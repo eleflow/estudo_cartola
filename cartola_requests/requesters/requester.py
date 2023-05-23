@@ -1,7 +1,7 @@
 import json
 import requests
 
-from airflow.cartola_api.config import Config
+from cartola_requests.config import Config
 
 class Requester:
 

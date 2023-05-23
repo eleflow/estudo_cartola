@@ -2,8 +2,8 @@ from datetime import datetime
 import pytest
 import requests_mock
 
-from airflow.cartola_api.config import Config
-from airflow.cartola_api.requesters.clubs_requester import ClubsRequester
+from cartola_requests.config import Config
+from cartola_requests.requesters.clubs_requester import ClubsRequester
 
 config = Config.instance()
 
@@ -15,7 +15,7 @@ config = Config.instance()
         )
     ])
 def test_build_clubs(mocker, expected, response):
-    mock_date = mocker.patch("airflow.cartola_api.requesters.clubs_requester.datetime")
+    mock_date = mocker.patch("cartola_requests.requesters.clubs_requester.datetime")
     FAKE_NOW = datetime(2000, 10, 10, 0, 0, 0)
     mock_date.now.return_value = FAKE_NOW
     expected[0]["year"] = mock_date.date.today().year

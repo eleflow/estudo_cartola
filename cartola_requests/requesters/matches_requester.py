@@ -3,8 +3,8 @@ import json
 import logging
 import requests
 
-from airflow.cartola_api.model.match import Match, MatchBuilder
-from airflow.cartola_api.requesters.requester import Requester
+from cartola_requests.model.match import Match, MatchBuilder
+from cartola_requests.requesters.requester import Requester
 
 logger = logging.getLogger(__name__)
 

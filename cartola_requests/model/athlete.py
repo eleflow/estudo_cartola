@@ -1,5 +1,7 @@
 from typing import List
-from airflow.cartola_api.model.scout import Scout, ScoutBuilder
+
+from cartola_requests.config import Config
+from cartola_requests.model.scout import Scout, ScoutBuilder
 
 class Athlete:
 
@@ -17,10 +19,14 @@ class Athlete:
         self.nickname = nickname
         self.picture = picture
         self.points = points
+        self.calculated_points = self.__calculated_points__()
         self.position_id = position_id
         self.club_id = club_id
         self.played_the_game = played_the_game
         self.year = year
+
+    def __calculated_points__(self):
+        return sum([value * Config.instance().get_pontuacao()[key][0] for dic in self.scouts for key, value in dic.items()], 0)
     
     def asdict(self):
         return (
@@ -30,6 +36,7 @@ class Athlete:
                 "nickname": self.nickname,
                 "picture": self.picture,
                 "points": self.points,
+                "calculated_points": self.calculated_points,
                 "position_id": self.position_id,
                 "club_id": self.club_id,
                 "played_the_game": self.played_the_game,
@@ -68,7 +75,7 @@ class AthleteBuilder:
         return self
     
     def played_the_game(self, played_the_game):
-        self.played_the_game = ("true" == played_the_game)
+        self.played_the_game = ("true" == str(played_the_game).lower())
         return self
     
     def year(self, year):

@@ -1,5 +1,3 @@
-from airflow.cartola_api.config import Config
-
 class Scout:
     
     def __init__(self, scout, value) -> None:

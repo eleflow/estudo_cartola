@@ -3,8 +3,8 @@ import json
 import logging
 import requests
 
-from airflow.cartola_api.model.athlete import Athlete, AthleteBuilder
-from airflow.cartola_api.requesters.requester import Requester
+from cartola_requests.model.athlete import Athlete, AthleteBuilder
+from cartola_requests.requesters.requester import Requester
 
 logger = logging.getLogger(__name__)
 
