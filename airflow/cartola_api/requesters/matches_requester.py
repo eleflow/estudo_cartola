@@ -1,33 +1,35 @@
 import datetime
 import json
+import logging
 import requests
 
-from airflow.cartola_api.requester import Requester
 from airflow.cartola_api.model.match import Match, MatchBuilder
+from airflow.cartola_api.requesters.requester import Requester
+
+logger = logging.getLogger(__name__)
+
 
 class MatchesRequester(Requester):
     
-    def __init__(self) -> None:
+    def __init__(self, turn) -> None:
         super().__init__()
         self.endpoint = "partidas"
         self.dictionary_key = "partidas"
+        self.turn = turn
     
     def matches(self):
-        last_turn = self.last_turn()
-
         year = datetime.date.today().year
         matches = []
         
-        for turn in range(1, last_turn):
-            turn_page = requests.get(f'{self.config.get_cartola_uri()}/{self.endpoint}/{turn}')
-            turn_json = json.loads(turn_page.content)
-            turn_matches = turn_json[self.dictionary_key]
-            
-            for match_data in turn_matches:
-                match = self.__build_match__(match_data, turn, year)
-                matches.append(match.asdict())
+        matches_page = requests.get(f'{self.config.get_cartola_uri()}/{self.endpoint}/{self.turn}')
+        matches_json = json.loads(matches_page.content)
+        try:
+            matches = matches_json[self.dictionary_key]
+        except Exception:
+            logger.error("Is not possible to find matches for this turn")
+            return []
 
-        return matches
+        return [self.__build_match__(match, self.turn, year) for match in matches]
     
     def __build_match__(self, match_data, turn, year):
         return (MatchBuilder()
@@ -42,4 +44,4 @@ class MatchesRequester(Requester):
                     .home_goal(match_data[Match.home_goal])
                     .visitor_goal(match_data[Match.visitor_goal])
                     .year(year)
-                    .build())
+                    .build()).asdict()

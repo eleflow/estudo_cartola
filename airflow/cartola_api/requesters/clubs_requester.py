@@ -2,8 +2,8 @@ import datetime
 import json
 import requests
 
-from airflow.cartola_api.requester import Requester
 from airflow.cartola_api.model.club import Club, ClubBuilder
+from airflow.cartola_api.requesters.requester import Requester
 
 class ClubsRequester(Requester):
     

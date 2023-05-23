@@ -4,7 +4,7 @@ import requests
 import requests_mock
 
 from airflow.cartola_api.config import Config
-from airflow.cartola_api.matches_requester import MatchesRequester
+from airflow.cartola_api.requesters.matches_requester import MatchesRequester
 
 config = Config.instance()
 
@@ -24,14 +24,15 @@ def test_mock_request():
         )
     ])
 def test_build_match(mocker, expected, response, last_turn_response):
-    mock_date = mocker.patch("airflow.cartola_api.matches_requester.datetime")
+    mock_date = mocker.patch("airflow.cartola_api.requesters.matches_requester.datetime")
     FAKE_NOW = datetime(2000, 10, 10, 0, 0, 0)
     mock_date.now.return_value = FAKE_NOW
     expected[0]["year"] = mock_date.date.today().year
 
     with requests_mock.Mocker() as mock_request:
+        turn = last_turn_response['rodada']-1
         mock_request.get(config.get_cartola_uri(), json=last_turn_response)
-        mock_request.get(f"{config.get_cartola_uri()}/partidas/1", json=response)
+        mock_request.get(f"{config.get_cartola_uri()}/partidas/{turn}", json=response)
 
-        subject = MatchesRequester()
+        subject = MatchesRequester(turn)
         assert expected == subject.matches()

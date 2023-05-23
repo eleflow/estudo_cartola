@@ -11,7 +11,7 @@ class Athlete:
     club_id: str = "clube_id"
     played_the_game: str = "entrou_em_campo"
     
-    def __init__(self, id:int, scouts:List[Scout], nickname:str, picture:str, points:float, position_id:int, club_id:int, played_the_game:bool, year: int) -> None:
+    def __init__(self, id:str, scouts:List[Scout], nickname:str, picture:str, points:float, position_id:int, club_id:int, played_the_game:bool, year: int) -> None:
         self.id = id
         self.scouts = scouts
         self.nickname = nickname
@@ -39,8 +39,8 @@ class Athlete:
 
 class AthleteBuilder:
 
-    def id(self, id):
-        self.id = id
+    def id(self, athlete_id):
+        self.id = athlete_id
         return self
     
     def scouts(self, scouts):
@@ -68,7 +68,7 @@ class AthleteBuilder:
         return self
     
     def played_the_game(self, played_the_game):
-        self.played_the_game = played_the_game
+        self.played_the_game = ("true" == played_the_game)
         return self
     
     def year(self, year):
@@ -76,16 +76,16 @@ class AthleteBuilder:
         return self
     
     def build(self):
-        scouts = [ScoutBuilder().scout_value(scout, value).build for scout, value in self.scouts.items()]
+        scouts = [ScoutBuilder().scout_value(scout, value).build().asdict() for scout, value in self.scouts.items()]
 
         return Athlete(
-            id=self.id,
-            scouts=scouts,
-            nickname=self.nickname,
-            picture=self.picture,
-            points=self.points,
-            position_id=self.position_id,
-            club_id=self.club_id,
-            played_the_game=self.played_the_game,
-            year=self.year
+            self.id,
+            scouts,
+            self.nickname,
+            self.picture,
+            self.points,
+            self.position_id,
+            self.club_id,
+            self.played_the_game,
+            self.year
         )

@@ -9,8 +9,7 @@ class Scout:
     def asdict(self):
         return (
             {
-                "scout": self.scout, 
-                "value": self.value
+                f"{self.scout}": self.value
             }
         )
 
