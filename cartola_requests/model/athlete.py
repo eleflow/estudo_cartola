@@ -13,8 +13,9 @@ class Athlete:
     club_id: str = "clube_id"
     played_the_game: str = "entrou_em_campo"
     
-    def __init__(self, id:str, scouts:List[Scout], nickname:str, picture:str, points:float, position_id:int, club_id:int, played_the_game:bool, year: int) -> None:
+    def __init__(self, id:str, turn:int, scouts:List[Scout], nickname:str, picture:str, points:float, position_id:int, club_id:int, played_the_game:bool, year: int) -> None:
         self.id = id
+        self.turn = turn
         self.scouts = scouts
         self.nickname = nickname
         self.picture = picture
@@ -32,6 +33,7 @@ class Athlete:
         return (
             {
                 "id": self.id,
+                "turn": self.turn,
                 "scouts": self.scouts,
                 "nickname": self.nickname,
                 "picture": self.picture,
@@ -48,6 +50,10 @@ class AthleteBuilder:
 
     def id(self, athlete_id):
         self.id = athlete_id
+        return self
+    
+    def turn(self, turn):
+        self.turn = turn
         return self
     
     def scouts(self, scouts):
@@ -87,6 +93,7 @@ class AthleteBuilder:
 
         return Athlete(
             self.id,
+            self.turn,
             scouts,
             self.nickname,
             self.picture,

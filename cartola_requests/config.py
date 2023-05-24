@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 class Config:
@@ -19,6 +20,22 @@ class Config:
     def get_schedule_interval(self):
         # Execute toda terça-feira às 17:00 horas
         return "0 17 * * tue"
+
+    def get_mongodb_database(self):
+        return "cartola"
+
+    def get_mongodb_app_name(self):
+        return "data-eyokm"
+    
+    def get_mongodb_uri(self):
+        password = self.get_mongodb_password()
+        return f"mongodb+srv://cartola:{password}@cluster0.zns1a.mongodb.net/?retryWrites=true&w=majority"
+    
+    def get_mongodb_cluster_name(self):
+        return "Cluster0"
+    
+    def get_mongodb_password(self):
+        return os.environ["MONGODB_PASSWORD"]
     
     def get_pontuacao(self) -> dict:
         return {
@@ -42,5 +59,5 @@ class Config:
                 "PC": (-1.0, "Pênalti cometido" ),
                 "GC": (-3.0, "Gol contra" ),
                 "CV": (-3.0, "Cartão vermelho" ),
-                "V" : ( 0.25, "Desconhecido" )
+                "V" : ( 1.0, "Vitória" )
             }

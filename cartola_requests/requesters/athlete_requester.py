@@ -33,6 +33,7 @@ class AthleteRequester(Requester):
     def __build_athlete__(self, athlete_id, athlete, year):
         return (AthleteBuilder()
                     .id(athlete_id)
+                    .turn(self.turn)
                     .scouts(athlete[Athlete.scout])
                     .nickname(athlete[Athlete.nickname])
                     .picture(athlete[Athlete.picture])
