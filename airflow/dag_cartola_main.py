@@ -26,12 +26,6 @@ logger = logging.getLogger(__name__)
 def get_turn():
     return Requester().last_turn()
 
-def empty_clubs_for_year():
-    repo = ClubsRepository()
-    year = datetime.date.today().year
-    response = repo.find_one({"year": year})
-    return str(response)
-
 
 def get_clubs(ti):
     response = ti.xcom_pull(task_ids="empty_clubs_for_year")
@@ -61,7 +55,7 @@ def get_matches(ti):
 
 
 def get_market():
-    return MarketRequester.market()
+    return MarketRequester().market()
 
 
 def write_athletes(ti):
@@ -93,12 +87,10 @@ def save_athletes(ti):
 
 
 def save_clubs(ti):
-    response = ti.xcom_pull(task_ids="empty_clubs_for_year")
-    if not response:
-        data = ti.xcom_pull(task_ids="get_clubs")
-        repo = ClubsRepository()
-        for club in data:
-            repo.insert_one(club)
+    data = ti.xcom_pull(task_ids="get_clubs")
+    repo = ClubsRepository()
+    for club in data:
+        repo.insert_one(club)
 
 
 def save_matches(ti):
@@ -117,7 +109,7 @@ def save_market(ti):
 
 with DAG("cartola", start_date=Config.instance().get_start_data(), schedule_interval=Config.instance().get_schedule_interval(), catchup=False) as dag:
     get_turn = PythonOperator(task_id="get_turn", python_callable=get_turn)
-    empty_clubs_for_year = PythonOperator(task_id="empty_clubs_for_year", python_callable=empty_clubs_for_year)
+    #empty_clubs_for_year = PythonOperator(task_id="empty_clubs_for_year", python_callable=empty_clubs_for_year)
     get_clubs = PythonOperator(task_id="get_clubs", python_callable=get_clubs)
     get_athletes = PythonOperator(task_id="get_athletes", python_callable=get_athletes)
     get_matches = PythonOperator(task_id="get_matches", python_callable=get_matches)
@@ -134,5 +126,4 @@ with DAG("cartola", start_date=Config.instance().get_start_data(), schedule_inte
     save_matches = PythonOperator(task_id="save_matches", python_callable=save_matches)
     save_market = PythonOperator(task_id="save_market", python_callable=save_market)
 
-    get_turn >> [get_athletes, get_matches, get_market] >> dummy_operation >> [save_athletes, save_matches, save_market]
-    empty_clubs_for_year >> get_clubs >> save_clubs
+    get_turn >> [get_athletes, get_matches, get_market, get_clubs] >> dummy_operation >> [save_athletes, save_matches, save_market, save_clubs]

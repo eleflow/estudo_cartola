@@ -5,6 +5,9 @@ class ClubsRepository(MongoDBAPI):
     def __init__(self) -> None:
         super().__init__()
 
+    def upsert_one(self, document: dict):
+        return super().upsert_one("clubs", {"id":document["id"], "year":document["year"]}, document)
+
     def insert_one(self, document: dict):
         return super().insert_one("clubs", document)
     
