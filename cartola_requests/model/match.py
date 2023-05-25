@@ -1,14 +1,14 @@
 class Match:
 
-    match_id: str = "partida_id"
-    home_id: str = "clube_casa_id"
-    visitor_id: str = "clube_visitante_id"
-    date: str = "partida_data"
-    timestamp: str = "timestamp"
-    local: str = "local"
-    valid: str = "valida"
-    home_goal: str = "placar_oficial_mandante"
-    visitor_goal: str = "placar_oficial_visitante"
+    MATCH_ID: str = "partida_id"
+    HOME_ID: str = "clube_casa_id"
+    VISITOR_ID: str = "clube_visitante_id"
+    DATE: str = "partida_data"
+    TIMESTAMP: str = "timestamp"
+    LOCAL: str = "local"
+    VALID: str = "valida"
+    HOME_GOAL: str = "placar_oficial_mandante"
+    VISITOR_GOAL: str = "placar_oficial_visitante"
 
     def __init__(self, match_id, turn, home_id, visitor_id, date, timestamp, local, valid, home_goal, visitor_goal, year):
         self.match_id = match_id

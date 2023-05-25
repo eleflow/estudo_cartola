@@ -23,8 +23,8 @@ class ClubsRequester(Requester):
     
     def __build_club__(self, club, year):
         return (ClubBuilder()
-                    .id(club[Club.id])
-                    .name(club[Club.name])
-                    .initials(club[Club.initials])
+                    .id(club[Club.ID])
+                    .name(club[Club.NAME])
+                    .initials(club[Club.INITIALS])
                     .year(year)
                     .build()).asdict()

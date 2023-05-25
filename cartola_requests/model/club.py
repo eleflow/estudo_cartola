@@ -1,8 +1,8 @@
 class Club:
 
-    id: str = "id"
-    name: str = "nome"
-    initials: str = "abreviacao"
+    ID: str = "id"
+    NAME: str = "nome"
+    INITIALS: str = "abreviacao"
 
     def __init__(self, id, name, initials, year) -> None:
         self.id = id

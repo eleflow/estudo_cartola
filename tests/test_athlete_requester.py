@@ -1,6 +1,5 @@
 from datetime import datetime
 import pytest
-import requests
 import requests_mock
 
 from cartola_requests.config import Config

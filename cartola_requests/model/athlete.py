@@ -5,13 +5,13 @@ from cartola_requests.model.scout import Scout, ScoutBuilder
 
 class Athlete:
 
-    scout: str = "scout"
-    nickname: str = "apelido"
-    picture: str = "foto"
-    points: str = "pontuacao"
-    position_id: str = "posicao_id"
-    club_id: str = "clube_id"
-    played_the_game: str = "entrou_em_campo"
+    SCOUT: str = "scout"
+    NICKNAME: str = "apelido"
+    PICTURE: str = "foto"
+    POINTS: str = "pontuacao"
+    POSITION_ID: str = "posicao_id"
+    CLUB_ID: str = "clube_id"
+    PLAYED_THE_GAME: str = "entrou_em_campo"
     
     def __init__(self, id:str, turn:int, scouts:List[Scout], nickname:str, picture:str, points:float, position_id:int, club_id:int, played_the_game:bool, year: int) -> None:
         self.id = id
@@ -27,14 +27,15 @@ class Athlete:
         self.year = year
 
     def __calculated_points__(self):
-        return sum([value * Config.instance().get_pontuacao()[key][0] for dic in self.scouts for key, value in dic.items()], 0)
+        return sum([scout.value * Scout.get_pontuacao(scout.scout) for scout in self.scouts], 0)
+        #[print(f"{scout.scout, scout.value}") for scout in self.scouts]
     
     def asdict(self):
         return (
             {
                 "id": self.id,
                 "turn": self.turn,
-                "scouts": self.scouts,
+                "scouts": [scout.asdict() for scout in self.scouts],
                 "nickname": self.nickname,
                 "picture": self.picture,
                 "points": self.points,
@@ -89,7 +90,7 @@ class AthleteBuilder:
         return self
     
     def build(self):
-        scouts = [ScoutBuilder().scout_value(scout, value).build().asdict() for scout, value in self.scouts.items()]
+        scouts = [ScoutBuilder().scout_value(scout, value).build() for scout, value in self.scouts.items()]
 
         return Athlete(
             self.id,

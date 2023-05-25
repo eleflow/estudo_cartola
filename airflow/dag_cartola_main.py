@@ -12,11 +12,13 @@ from cartola_requests.config import Config
 from cartola_requests.requesters.athlete_requester import AthleteRequester
 from cartola_requests.requesters.clubs_requester import ClubsRequester
 from cartola_requests.requesters.matches_requester import MatchesRequester
+from cartola_requests.requesters.market_requester import MarketRequester
 from cartola_requests.requesters.requester import Requester
 
 from cartola_requests.database.athletes_repository import AthletesRepository
 from cartola_requests.database.clubs_repository import ClubsRepository
 from cartola_requests.database.matches_repository import MatchesRepository
+from cartola_requests.database.market_repository import MarketRepository
 
 logger = logging.getLogger(__name__)
 
@@ -56,6 +58,10 @@ def get_matches(ti):
         matches.extend(MatchesRequester(t).matches())
 
     return matches
+
+
+def get_market():
+    return MarketRequester.market()
 
 
 def write_athletes(ti):
@@ -102,12 +108,20 @@ def save_matches(ti):
         repo.upsert_one(match)
 
 
+def save_market(ti):
+    data = ti.xcom_pull(task_ids="get_market")
+    repo = MarketRepository()
+    for market in data:
+        repo.upsert_one(market)
+
+
 with DAG("cartola", start_date=Config.instance().get_start_data(), schedule_interval=Config.instance().get_schedule_interval(), catchup=False) as dag:
     get_turn = PythonOperator(task_id="get_turn", python_callable=get_turn)
     empty_clubs_for_year = PythonOperator(task_id="empty_clubs_for_year", python_callable=empty_clubs_for_year)
     get_clubs = PythonOperator(task_id="get_clubs", python_callable=get_clubs)
     get_athletes = PythonOperator(task_id="get_athletes", python_callable=get_athletes)
     get_matches = PythonOperator(task_id="get_matches", python_callable=get_matches)
+    get_market = PythonOperator(task_id="get_market", python_callable=get_market)
 
     dummy_operation = DummyOperator(task_id = 'dummy_operation')
 
@@ -118,6 +132,7 @@ with DAG("cartola", start_date=Config.instance().get_start_data(), schedule_inte
     save_clubs = PythonOperator(task_id="save_clubs", python_callable=save_clubs)
     save_athletes = PythonOperator(task_id="save_athletes", python_callable=save_athletes)
     save_matches = PythonOperator(task_id="save_matches", python_callable=save_matches)
+    save_market = PythonOperator(task_id="save_market", python_callable=save_market)
 
-    get_turn >> [get_athletes, get_matches] >> dummy_operation >> [save_athletes, save_matches]
+    get_turn >> [get_athletes, get_matches, get_market] >> dummy_operation >> [save_athletes, save_matches, save_market]
     empty_clubs_for_year >> get_clubs >> save_clubs
