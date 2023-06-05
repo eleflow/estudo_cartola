@@ -39,6 +39,23 @@ class Match:
                 "year":self.year
             }
         )
+    
+    def to_save(self):
+        return (
+            {
+                "match_id": self.match_id, 
+                "turn": self.turn, 
+                "home_id": self.home_id,
+                "visitor_id": self.visitor_id,
+                "date": self.date,
+                "timestamp": self.timestamp,
+                "local": self.local,
+                "valid": self.valid,
+                "home_goal": self.home_goal,
+                "visitor_goal": self.visitor_goal,
+                "year":self.year
+            }
+        )
 
 class MatchBuilder:
 

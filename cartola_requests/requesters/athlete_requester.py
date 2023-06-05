@@ -42,4 +42,4 @@ class AthleteRequester(Requester):
                     .club_id(athlete[Athlete.CLUB_ID])
                     .played_the_game(athlete[Athlete.PLAYED_THE_GAME])
                     .year(year)
-                    .build()).asdict()
+                    .build()).to_save()

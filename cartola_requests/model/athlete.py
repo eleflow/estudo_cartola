@@ -46,6 +46,49 @@ class Athlete:
                 "year": self.year
             }
         )
+    
+    def to_save(self):
+
+        scouts = { scout: 0 for scout in Scout.get_scouts().keys() }
+        scouts_from_request = {scout.get_scout(): scout.get_value() for scout in self.scouts}
+        for scout in scouts_from_request:
+            scouts[scout] = scouts_from_request[scout]
+
+        return (
+            {
+                "id": self.id,
+                "turn": self.turn,
+                "scout_g" : scouts[Scout.G ],
+                "scout_a" : scouts[Scout.A ],
+                "scout_ft": scouts[Scout.FT],
+                "scout_fd": scouts[Scout.FD],
+                "scout_ff": scouts[Scout.FF],
+                "scout_fs": scouts[Scout.FS],
+                "scout_ps": scouts[Scout.PS],
+                "scout_dp": scouts[Scout.DP],
+                "scout_sg": scouts[Scout.SG],
+                "scout_de": scouts[Scout.DE],
+                "scout_ds": scouts[Scout.DS],
+                "scout_pp": scouts[Scout.PP],
+                "scout_i" : scouts[Scout.I ],
+                "scout_pi": scouts[Scout.PI],
+                "scout_ca": scouts[Scout.CA],
+                "scout_gs": scouts[Scout.GS],
+                "scout_fc": scouts[Scout.FC],
+                "scout_pc": scouts[Scout.PC],
+                "scout_gc": scouts[Scout.GC],
+                "scout_cv": scouts[Scout.CV],
+                "scout_v" : scouts[Scout.V ],
+                "nickname": self.nickname,
+                "picture": self.picture,
+                "points": self.points,
+                "calculated_points": self.calculated_points,
+                "position_id": self.position_id,
+                "club_id": self.club_id,
+                "played_the_game": self.played_the_game,
+                "year": self.year
+            }
+        )
 
 class AthleteBuilder:
 

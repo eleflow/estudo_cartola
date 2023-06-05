@@ -44,4 +44,4 @@ class MatchesRequester(Requester):
                     .home_goal(match_data[Match.HOME_GOAL])
                     .visitor_goal(match_data[Match.VISITOR_GOAL])
                     .year(year)
-                    .build()).asdict()
+                    .build()).to_save()

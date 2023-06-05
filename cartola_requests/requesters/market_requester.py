@@ -48,4 +48,4 @@ class MarketRequester(Requester):
                     .year(year)
                     .scouts(market_data[Scout.SCOUT])
                     .master_cat(market_data[MasterCat.MASTER_CAT])
-                    .build().asdict())
+                    .build().to_save())

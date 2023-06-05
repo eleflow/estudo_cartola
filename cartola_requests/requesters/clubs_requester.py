@@ -27,4 +27,4 @@ class ClubsRequester(Requester):
                     .name(club[Club.NAME])
                     .initials(club[Club.INITIALS])
                     .year(year)
-                    .build()).asdict()
+                    .build()).to_save()
