@@ -6,7 +6,7 @@ class MarketRepository(MongoDBAPI):
         super().__init__()
 
     def upsert_one(self, document: dict):
-        return super().upsert_one("market", {"athlete_id":document["athlete_id"], "turn":document["turn"], "club_id":document["club_id"]}, document)
+        return super().upsert_one("market", {"athlete_id":document["athlete_id"], "turn":document["turn"], "club_id":document["club_id"], "year":document["year"]}, document)
 
     def insert_one(self, document: dict):
         return super().insert_one("market", document)
