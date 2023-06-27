@@ -6,7 +6,7 @@ class AthletesRepository(MongoDBAPI):
         super().__init__()
 
     def upsert_one(self, document: dict):
-        return super().upsert_one("athletes", {"id":document["id"], "turn":document["turn"], "year": document["year"]}, document)
+        return super().upsert_one("athletes", {"id_player":document["id_player"], "turn":document["turn"], "year": document["year"]}, document)
 
     def insert_one(self, document: dict):
         return super().insert_one("athletes", document)

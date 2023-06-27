@@ -16,9 +16,10 @@ RUN python -m pip install --upgrade pip
 RUN pip install "apache-airflow==${AIRFLOW_VERSION}" --constraint "${CONSTRAINT_URL}"
 RUN pip install -r /opt/cartola/requirements.txt
 
-COPY airflow/dag_cartola_main.py /root/airflow/dags/
+COPY airflow_cartola/dag_cartola_main.py /root/airflow/dags/
 
-COPY cartola_requests /root/airflow/dags/cartola_requests
+COPY cartola_requests /root/airflow/dags/cartola_requests/
+COPY airflow_cartola/cartola_tasks/transformations.py /root/airflow/dags/cartola_tasks/
 
 EXPOSE 8080
 

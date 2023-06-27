@@ -18,8 +18,8 @@ class Config:
         return datetime(2023, 4, 18)
     
     def get_schedule_interval(self):
-        # Execute toda terça-feira às 17:00 horas
-        return "0 17 * * tue"
+        # Execute toda terça-feira às 17:00 horas (-3 GMT)
+        return "0 20 * * tue"
 
     def get_mongodb_database(self):
         return "cartola"

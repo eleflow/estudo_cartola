@@ -23,7 +23,7 @@ class Club:
     def to_save(self):
         return (
             {
-                "id": self.id, 
+                "id_club": self.id, 
                 "name": self.name, 
                 "initials": self.initials,
                 "year": self.year

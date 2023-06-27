@@ -55,7 +55,7 @@ class Athlete:
 
         return (
             {
-                "id": self.id,
+                "id_player": self.id,
                 "turn": self.turn,
                 "scout_g" : scouts[Scout.G ],
                 "scout_a" : scouts[Scout.A ],
@@ -82,8 +82,8 @@ class Athlete:
                 "picture": self.picture,
                 "points": self.points,
                 "calculated_points": self.calculated_points,
-                "position_id": self.position_id,
-                "club_id": self.club_id,
+                "id_position": self.position_id,
+                "id_club": self.club_id,
                 "has_played": self.has_played,
                 "year": self.year
             }
