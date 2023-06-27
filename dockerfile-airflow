@@ -19,7 +19,7 @@ RUN pip install -r /opt/cartola/requirements.txt
 COPY airflow_cartola/dag_cartola_main.py /root/airflow/dags/
 
 COPY cartola_requests /root/airflow/dags/cartola_requests/
-COPY airflow_cartola/cartola_tasks/transformations.py /root/airflow/dags/cartola_tasks/
+COPY airflow_cartola/cartola_tasks /root/airflow/dags/cartola_tasks/
 
 EXPOSE 8080
 

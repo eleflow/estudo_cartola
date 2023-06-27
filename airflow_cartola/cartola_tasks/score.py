@@ -1,35 +1,9 @@
 import pandas
 
-class Transformations:
+class Score:
 
-    def get_score_filter(self, score):
-        return {
-                "id_player":score["id_player"], 
-                "time":score["time"], 
-                "id_club":score["id_club"], 
-                "id_position":score["id_position"],
-                "points_casa":score["points_casa"],
-                "points_fora":score["points_fora"],
-                "total_pontos":score["total_pontos"],
-                "total_jogos":score["total_jogos"]
-            }
-    
-    def get_score_data(self, score):
-        return {
-            "id_player":score["id_player"], 
-            "time":score["time"], 
-            "id_club":score["id_club"], 
-            "id_position":score["id_position"], 
-            "points_casa":score["points_casa"],
-            "has_played_casa":score["has_played_casa"], 
-            "points_fora":score["points_fora"], 
-            "has_played_fora":score["has_played_fora"], 
-            "total_pontos":score["total_pontos"],
-            "total_jogos":score["total_jogos"]
-        }
-    
     def cria_dataframe_pontuacao(self, matches, scouts, clubs):
-        df_scouts = self.__realiza_merge_entre_partidas_scouts_clube__(matches, scouts, clubs)
+        df_scouts = self.realiza_merge_entre_partidas_scouts_clube(matches, scouts, clubs)
 
         df_pontuacao_casa = df_scouts[df_scouts['CASA']==1].groupby(['id_player','time', 'id_club', 'id_position']).agg({'points':'sum', 'has_played':'sum'}).reset_index()
         df_pontuacao_fora = df_scouts[df_scouts['CASA']==0].groupby(['id_player', 'time', 'id_club', 'id_position']).agg({'points':'sum', 'has_played':'sum'}).reset_index()
@@ -40,9 +14,13 @@ class Transformations:
         df_pontuacao['total_pontos']=df_pontuacao['points_fora']+df_pontuacao['points_casa']
         df_pontuacao['total_jogos']=df_pontuacao['has_played_casa']+df_pontuacao['has_played_fora']
 
+        df_pontuacao['media_geral']=df_pontuacao['total_pontos']/df_pontuacao['total_jogos']
+        df_pontuacao['media_casa']=df_pontuacao['points_casa']/df_pontuacao['has_played_casa']
+        df_pontuacao['media_fora']=df_pontuacao['points_fora']/df_pontuacao['has_played_fora']
+
         return df_pontuacao
     
-    def __realiza_merge_entre_partidas_scouts_clube__(self, matches, scouts, clubs):
+    def realiza_merge_entre_partidas_scouts_clube(self, matches, scouts, clubs):
         df_match = pandas.DataFrame.from_dict(matches)
         df_scouts = pandas.DataFrame.from_dict(scouts)
         df_club = pandas.DataFrame.from_dict(clubs)
