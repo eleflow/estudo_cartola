@@ -16,6 +16,7 @@ class Candidates:
     def get_candidates_filter(self, candidates):
         return {
                 "id_player":candidates["id_player"],
+                "turn":candidates["turn"],
                 "time":candidates["time"],
                 "id_club":candidates["id_club"],
                 "id_position":candidates["id_position"]
@@ -24,6 +25,9 @@ class Candidates:
     def get_candidates_data(self, candidates):
         return {
             "id_player":candidates["id_player"], 
+            "turn":candidates["turn"],
+            "criterio_1":candidates["criterio_1"],
+            "criterio_2":candidates["criterio_2"],
             "indicacao":candidates["indicacao"], 
             "time":candidates["time"], 
             "id_club":candidates["id_club"], 
@@ -36,10 +40,10 @@ class Candidates:
             "total_jogos":candidates["total_jogos"], 
             "media_geral":candidates["media_geral"], 
             "media_casa":candidates["media_casa"],
-            "media_fora":candidates["media_fora"]
+            "media_fora":candidates["media_fora"],
         }
 
-    def lista_jogadores_candidatos(self, matches, scouts, clubs, next_matches, market):
+    def lista_jogadores_candidatos(self, matches, scouts, clubs, next_matches, market, turn):
         
         df_pontuacao = self.score.cria_dataframe_pontuacao(matches, scouts, clubs)
         df_scouts = self.score.realiza_merge_entre_partidas_scouts_clube(matches, scouts, clubs)
@@ -50,8 +54,7 @@ class Candidates:
 
         df_conquistados = self.__cria_dataframe_pontuacao_conquistada__(df_next_matches, df_scouts, df_club)
 
-        df_acc_canditatos = pandas.DataFrame()
-        
+        df_acc_candidatos_1 = pandas.DataFrame()
         for p in self.positions_list:
             candidados_top3 = df_conquistados[(df_conquistados['id_position'] == p)].sort_values(by='cedidos_mais_conquistados', ascending=False).head(3)
             for index, row in candidados_top3.iterrows():
@@ -59,20 +62,32 @@ class Candidates:
                 clube_id = df_club[df_club['name']==clube]['id_club'].iloc[0]
                 position = row['id_position']
                 df_candidatos = df_mercado[(df_mercado['club_id']==clube_id) & (df_mercado['position']==position) & (df_mercado['status_id']==7)]
-                df_acc_canditatos = df_acc_canditatos.append(df_candidatos)
-                
+                df_acc_candidatos_1 = df_acc_candidatos_1.append(df_candidatos)
+        
+        df_acc_candidatos_1["criterio_1"] = 1
+        df_acc_candidatos_1["criterio_2"] = 0
+
+        df_acc_candidatos_2 = pandas.DataFrame()
         for p in self.positions_list:
             candidados_top5 = df_pontuacao[(df_pontuacao['id_position']==p) & (df_pontuacao['total_jogos']>8)].sort_values(by='media_geral', ascending=False).head(5)
             for index, row in candidados_top5.iterrows():
                 id_player = row['id_player']
                 df_candidatos = df_mercado[(df_mercado['athlete_id']==int(id_player)) & (df_mercado['status_id']==7)]
-                df_acc_canditatos = df_acc_canditatos.append(df_candidatos)
+                df_acc_candidatos_2 = df_acc_candidatos_2.append(df_candidatos)
+            
+        df_acc_candidatos_2["criterio_1"] = 0
+        df_acc_candidatos_2["criterio_2"] = 1
 
-        df_acc_canditatos_final = df_acc_canditatos.groupby('athlete_id').size().reset_index()
-        df_acc_canditatos_final.columns = ['id_player', 'indicacao']
-        df_acc_canditatos_final['id_player'] = df_acc_canditatos_final['id_player'].astype(str)
-        df_acc_canditatos_final = pandas.merge(df_acc_canditatos_final, df_pontuacao, on=['id_player'], how='left')
-        return df_acc_canditatos_final.sort_values(['id_position', 'indicacao'], ascending=[True, False])
+        df_acc_candidatos = pandas.concat([df_acc_candidatos_1, df_acc_candidatos_2])
+
+        df_acc_candidatos_final = df_acc_candidatos.groupby('athlete_id')["criterio_1", "criterio_2"].sum().reset_index()
+        df_acc_candidatos_final.columns = ['id_player', "criterio_1", "criterio_2"]
+        df_acc_candidatos_final["indicacao"] = df_acc_candidatos_final["criterio_1"] + df_acc_candidatos_final["criterio_2"]
+        df_acc_candidatos_final['id_player'] = df_acc_candidatos_final['id_player'].astype(str)
+        df_acc_candidatos_final = pandas.merge(df_acc_candidatos_final, df_pontuacao, on=['id_player'], how='left')
+        df_acc_candidatos_final["turn"] = turn
+
+        return df_acc_candidatos_final.sort_values(['id_position', 'indicacao'], ascending=[True, False])
 
     def __cria_dataframe_pontuacao_conquistada__(self, df_next_match, df_scouts, df_club):
         df_next_matches_com_clubes = self.__adiciona_clubes_nas_proximas_partidas__(df_next_match, df_club)

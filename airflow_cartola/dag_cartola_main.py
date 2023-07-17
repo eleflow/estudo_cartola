@@ -119,7 +119,7 @@ def create_candidates_dataframe(ti):
     next_matches = MatchesRequester(turn).matches()
 
     candidates = Candidates()
-    data = candidates.lista_jogadores_candidatos(matches, athletes, clubs, next_matches, market)
+    data = candidates.lista_jogadores_candidatos(matches, athletes, clubs, next_matches, market, turn)
 
     repo = MongoDBAPI()
     for idx, line in data.iterrows():
@@ -157,6 +157,10 @@ with DAG("cartola", start_date=Config.instance().get_start_data(), schedule_inte
     [save_athletes, save_matches, save_market, save_clubs] >> dummy_operation >> create_candidates_dataframe
 
     #Modo debug
+    #get_turn >> get_athletes
+    #get_turn >> get_matches
+    #get_turn >> get_market
+    #empty_clubs_for_year >> get_turn >> get_clubs
     #[get_athletes, get_matches, get_market, get_clubs] >> dummy_operation >> create_candidates_dataframe
 
     #write_clubs = PythonOperator(task_id="write_clubs", python_callable=write_clubs)
