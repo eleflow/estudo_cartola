@@ -11,6 +11,9 @@ class Config:
             cls._instance = cls()
         return cls._instance
     
+    def get_mais_escalados_uri(self) -> str:
+        return "https://gatomestre.ge.globo.com/mais-escalados-do-cartola/"
+
     def get_cartola_uri(self) -> str:
         return "https://api.cartolafc.globo.com"
     

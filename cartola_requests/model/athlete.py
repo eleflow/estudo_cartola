@@ -132,7 +132,9 @@ class AthleteBuilder:
         return self
     
     def build(self):
-        scouts = [ScoutBuilder().scout_value(scout, value).build() for scout, value in self.scouts.items()]
+        scouts = []
+        if self.scouts:
+            scouts = [ScoutBuilder().scout_value(scout, value).build() for scout, value in self.scouts.items()]
 
         return Athlete(
             self.id,

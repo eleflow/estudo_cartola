@@ -43,7 +43,7 @@ class Candidates:
             "media_fora":candidates["media_fora"],
         }
 
-    def lista_jogadores_candidatos(self, matches, scouts, clubs, next_matches, market, turn):
+    def lista_jogadores_candidatos(self, matches, scouts, clubs, next_matches, market, turn, chosen):
         
         df_pontuacao = self.score.cria_dataframe_pontuacao(matches, scouts, clubs)
         df_scouts = self.score.realiza_merge_entre_partidas_scouts_clube(matches, scouts, clubs)
@@ -66,6 +66,7 @@ class Candidates:
         
         df_acc_candidatos_1["criterio_1"] = 1
         df_acc_candidatos_1["criterio_2"] = 0
+        df_acc_candidatos_1["criterio_3"] = 0
 
         df_acc_candidatos_2 = pandas.DataFrame()
         for p in self.positions_list:
@@ -77,12 +78,23 @@ class Candidates:
             
         df_acc_candidatos_2["criterio_1"] = 0
         df_acc_candidatos_2["criterio_2"] = 1
+        df_acc_candidatos_2["criterio_3"] = 0
 
-        df_acc_candidatos = pandas.concat([df_acc_candidatos_1, df_acc_candidatos_2])
+        df_acc_candidatos_3 = pandas.DataFrame()
+        for c in chosen:
+            clube_id = df_club[df_club["initials"] == c["club"]]
+            df_candidatos = df_mercado[(df_mercado["nickname"]==c["name"]) & (df_mercado["status_id"]==7) & (df_mercado["club_id"]==clube_id)]
+            df_acc_candidatos_3 = df_acc_candidatos_3.append(df_candidatos)
+        
+        df_acc_candidatos_3["criterio_1"] = 0
+        df_acc_candidatos_3["criterio_2"] = 0
+        df_acc_candidatos_3["criterio_3"] = 1
 
-        df_acc_candidatos_final = df_acc_candidatos.groupby('athlete_id')["criterio_1", "criterio_2"].sum().reset_index()
-        df_acc_candidatos_final.columns = ['id_player', "criterio_1", "criterio_2"]
-        df_acc_candidatos_final["indicacao"] = df_acc_candidatos_final["criterio_1"] + df_acc_candidatos_final["criterio_2"]
+        df_acc_candidatos = pandas.concat([df_acc_candidatos_1, df_acc_candidatos_2, df_acc_candidatos_3])
+
+        df_acc_candidatos_final = df_acc_candidatos.groupby('athlete_id')["criterio_1", "criterio_2", "criterio_3"].sum().reset_index()
+        df_acc_candidatos_final.columns = ['id_player', "criterio_1", "criterio_2", "criterio_3"]
+        df_acc_candidatos_final["indicacao"] = df_acc_candidatos_final["criterio_1"] + df_acc_candidatos_final["criterio_2"] + df_acc_candidatos_final["criterio_3"]
         df_acc_candidatos_final['id_player'] = df_acc_candidatos_final['id_player'].astype(str)
         df_acc_candidatos_final = pandas.merge(df_acc_candidatos_final, df_pontuacao, on=['id_player'], how='left')
         df_acc_candidatos_final["turn"] = turn
