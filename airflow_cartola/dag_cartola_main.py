@@ -15,8 +15,9 @@ from cartola_requests.requesters.athlete_requester import AthleteRequester
 from cartola_requests.requesters.clubs_requester import ClubsRequester
 from cartola_requests.requesters.matches_requester import MatchesRequester
 from cartola_requests.requesters.market_requester import MarketRequester
-from cartola_requests.requesters.chosen_requester import ChosenRequester
 from cartola_requests.requesters.requester import Requester
+
+from cartola_requests.webscraper.most_chosen import MostChosen
 
 from cartola_requests.database.athletes_repository import AthletesRepository
 from cartola_requests.database.clubs_repository import ClubsRepository
@@ -61,9 +62,8 @@ def get_market():
     return MarketRequester().market()
 
 
-def get_chosen(ti):
-    turn = ti.xcom_pull(task_ids="get_turn")
-    return ChosenRequester(turn).most_chosen()
+def get_chosen():
+    return MostChosen().most_chosen()
 
 
 def write_athletes(ti):
@@ -83,7 +83,7 @@ def write_matches(ti):
 
 def __get_dataframe__(ti, task_id) -> DataFrame:
     data = ti.xcom_pull(task_ids=task_id)
-    logging.info(f"List of Dict>>> {data}")
+    print(f"List of Dict>>> {data}")
     return pandas.DataFrame.from_dict(data)
 
 

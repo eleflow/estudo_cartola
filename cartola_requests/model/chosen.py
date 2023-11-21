@@ -76,81 +76,81 @@ class Chosen:
 
 class ChosenBuilder:
 
-    def position(self, position):
-        self.position = position
+    def position(self, _position):
+        self._position = _position
         return self
     
-    def short_position(self, short_position):
-        self.short_position = short_position
+    def short_position(self, _short_position):
+        self._short_position = _short_position
         return self
     
-    def short_club(self, short_club):
-        self.short_club = short_club
+    def short_club(self, _short_club):
+        self._short_club = _short_club
         return self
     
-    def club_name(self, club_name):
-        self.club_name = club_name
+    def club_name(self, _club_name):
+        self._club_name = _club_name
         return self
     
-    def club_id(self, club_id):
-        self.club_id = club_id
+    def club_id(self, _club_id):
+        self._club_id = _club_id
         return self
     
-    def shield(self, shield):
-        self.shield = shield
+    def shield(self, _shield):
+        self._shield = _shield
         return self
     
-    def name(self, name):
-        self.name = name
+    def name(self, _name):
+        self._name = _name
         return self
     
-    def nickname(self, nickname):
-        self.nickname = nickname
+    def nickname(self, _nickname):
+        self._nickname = _nickname
         return self
     
-    def short_nickname(self, short_nickname):
-        self.short_nickname = short_nickname
+    def short_nickname(self, _short_nickname):
+        self._short_nickname = _short_nickname
         return self
     
-    def picture(self, picture):
-        self.picture = picture
+    def picture(self, _picture):
+        self._picture = _picture
         return self
     
-    def athlete_id(self, athlete_id):
-        self.athlete_id = athlete_id
+    def athlete_id(self, _athlete_id):
+        self._athlete_id = _athlete_id
         return self
     
-    def price(self, price):
-        self.price = price
+    def price(self, _price):
+        self._price = _price
         return self
     
-    def escalations(self, escalations):
-        self.escalations = escalations
+    def escalations(self, _escalations):
+        self._escalations = _escalations
         return self
     
-    def turn(self, turn):
-        self.turn = turn
+    def turn(self, _turn):
+        self._turn = _turn
         return self
     
-    def year(self, year):
-        self.year = year
+    def year(self, _year):
+        self._year = _year
         return self
     
     def build(self):
         return Chosen(
-            self.position,
-            self.short_position,
-            self.short_club,
-            self.club_name,
-            self.club_id,
-            self.shield,
-            self.name,
-            self.nickname,
-            self.short_nickname,
-            self.picture,
-            self.athlete_id,
-            self.price,
-            self.escalations,
-            self.turn,
-            self.year
+            self._position,
+            self._short_position,
+            self._short_club,
+            self._club_name,
+            self._club_id,
+            self._shield,
+            self._name,
+            self._nickname,
+            self._short_nickname,
+            self._picture,
+            self._athlete_id,
+            self._price,
+            self._escalations,
+            self._turn,
+            self._year
         )
