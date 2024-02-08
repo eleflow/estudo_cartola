@@ -1,6 +1,5 @@
 from typing import List
 
-from cartola_requests.config import Config
 from cartola_requests.model.scout import Scout, ScoutBuilder
 
 class Athlete:
@@ -11,9 +10,9 @@ class Athlete:
     POINTS: str = "pontuacao"
     POSITION_ID: str = "posicao_id"
     CLUB_ID: str = "clube_id"
-    PLAYED_THE_GAME: str = "entrou_em_campo"
+    HAS_PLAYED: str = "entrou_em_campo"
     
-    def __init__(self, id:str, turn:int, scouts:List[Scout], nickname:str, picture:str, points:float, position_id:int, club_id:int, played_the_game:bool, year: int) -> None:
+    def __init__(self, id:str, turn:int, scouts:List[Scout], nickname:str, picture:str, points:float, position_id:int, club_id:int, has_played:bool, year: int) -> None:
         self.id = id
         self.turn = turn
         self.scouts = scouts
@@ -23,7 +22,7 @@ class Athlete:
         self.calculated_points = self.__calculated_points__()
         self.position_id = position_id
         self.club_id = club_id
-        self.played_the_game = played_the_game
+        self.has_played = has_played
         self.year = year
 
     def __calculated_points__(self):
@@ -42,7 +41,7 @@ class Athlete:
                 "calculated_points": self.calculated_points,
                 "position_id": self.position_id,
                 "club_id": self.club_id,
-                "played_the_game": self.played_the_game,
+                "has_played": self.has_played,
                 "year": self.year
             }
         )
@@ -56,7 +55,7 @@ class Athlete:
 
         return (
             {
-                "id": self.id,
+                "id_player": self.id,
                 "turn": self.turn,
                 "scout_g" : scouts[Scout.G ],
                 "scout_a" : scouts[Scout.A ],
@@ -83,9 +82,9 @@ class Athlete:
                 "picture": self.picture,
                 "points": self.points,
                 "calculated_points": self.calculated_points,
-                "position_id": self.position_id,
-                "club_id": self.club_id,
-                "played_the_game": self.played_the_game,
+                "id_position": self.position_id,
+                "id_club": self.club_id,
+                "has_played": self.has_played,
                 "year": self.year
             }
         )
@@ -124,8 +123,8 @@ class AthleteBuilder:
         self.club_id = club_id
         return self
     
-    def played_the_game(self, played_the_game):
-        self.played_the_game = ("true" == str(played_the_game).lower())
+    def has_played(self, has_played):
+        self.has_played = ("true" == str(has_played).lower())
         return self
     
     def year(self, year):
@@ -133,7 +132,9 @@ class AthleteBuilder:
         return self
     
     def build(self):
-        scouts = [ScoutBuilder().scout_value(scout, value).build() for scout, value in self.scouts.items()]
+        scouts = []
+        if self.scouts:
+            scouts = [ScoutBuilder().scout_value(scout, value).build() for scout, value in self.scouts.items()]
 
         return Athlete(
             self.id,
@@ -144,6 +145,6 @@ class AthleteBuilder:
             self.points,
             self.position_id,
             self.club_id,
-            self.played_the_game,
+            self.has_played,
             self.year
         )

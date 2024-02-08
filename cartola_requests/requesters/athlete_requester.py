@@ -40,6 +40,6 @@ class AthleteRequester(Requester):
                     .points(athlete[Athlete.POINTS])
                     .position_id(athlete[Athlete.POSITION_ID])
                     .club_id(athlete[Athlete.CLUB_ID])
-                    .played_the_game(athlete[Athlete.PLAYED_THE_GAME])
+                    .has_played(athlete[Athlete.HAS_PLAYED])
                     .year(year)
                     .build()).to_save()
